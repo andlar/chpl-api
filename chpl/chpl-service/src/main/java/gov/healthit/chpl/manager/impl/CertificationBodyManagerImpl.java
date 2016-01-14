@@ -59,7 +59,6 @@ public class CertificationBodyManagerImpl extends ApplicationObjectSupport imple
 
 	@Autowired
 	private ActivityManager activityManager;
-	
 
 	@Transactional
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -83,18 +82,21 @@ public class CertificationBodyManagerImpl extends ApplicationObjectSupport imple
 	
 	@Transactional
 	@PreAuthorize("hasRole('ROLE_ADMIN') or hasPermission(#acb, admin)")
-	public CertificationBodyDTO update(CertificationBodyDTO acb) throws EntityRetrievalException, JsonProcessingException, EntityCreationException {
-		
-		CertificationBodyDTO toUpdate = certificationBodyDAO.getById(acb.getId());
-		
-		CertificationBodyDTO result = certificationBodyDAO.update(acb);
-		
-		logger.debug("Updated acb " + acb);
-		
-		String activityMsg = "Updated acb " + acb.getName();
-		
-		activityManager.addActivity(ActivityConcept.ACTIVITY_CONCEPT_CERTIFICATION_BODY, result.getId(), activityMsg, toUpdate, result);
-		
+	public CertificationBodyDTO update(CertificationBodyDTO acb) throws EntityRetrievalException, JsonProcessingException, EntityCreationException, UpdateCertifiedBodyException {
+
+		CertificationBodyDTO result = null;
+
+		if((acb.getName() != null && Util.isUserRoleAdmin()) || acb.getName() == null){
+			CertificationBodyDTO toUpdate = certificationBodyDAO.getById(acb.getId());
+			result = certificationBodyDAO.update(acb);
+			logger.debug("Updated acb " + acb);
+			String activityMsg = "Updated acb " + acb.getName();
+			activityManager.addActivity(ActivityConcept.ACTIVITY_CONCEPT_CERTIFICATION_BODY, result.getId(), activityMsg, toUpdate, result);
+		}else{
+			logger.debug("ACB update failed: only admin can update acb name.");
+			throw new UpdateCertifiedBodyException("Only ADMIN can change the name of an ACB.");
+		}
+
 		return result;
 	}
 	
