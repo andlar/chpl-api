@@ -6,6 +6,7 @@ import gov.healthit.chpl.dao.EntityCreationException;
 import gov.healthit.chpl.dao.EntityRetrievalException;
 import gov.healthit.chpl.domain.ValidationErrorJSONObject;
 import gov.healthit.chpl.manager.impl.UpdateCertifiedBodyException;
+import gov.healthit.chpl.manager.impl.UpdateTestingLabException;
 import gov.healthit.chpl.web.controller.InvalidArgumentsException;
 import gov.healthit.chpl.web.controller.ValidationException;
 
@@ -50,7 +51,10 @@ public class ApiExceptionControllerAdvice {
 		return new ResponseEntity<ErrorJSONObject>(new ErrorJSONObject("Access Denied"), HttpStatus.FORBIDDEN);
 	}
 	
-	
+	@ExceptionHandler(UpdateTestingLabException.class )
+	public ResponseEntity<ErrorJSONObject> exception(UpdateTestingLabException e) {
+		return new ResponseEntity<ErrorJSONObject>(new ErrorJSONObject("Access Denied"), HttpStatus.FORBIDDEN);
+	}
 	
 	@ExceptionHandler(MessagingException.class)
 	public ResponseEntity<ErrorJSONObject> exception(MessagingException e) {

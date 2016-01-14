@@ -81,9 +81,9 @@ public class CertificationBodyManagerImpl extends ApplicationObjectSupport imple
 	public CertificationBodyDTO update(CertificationBodyDTO acb) throws EntityRetrievalException, JsonProcessingException, EntityCreationException, UpdateCertifiedBodyException {
 
 		CertificationBodyDTO result = null;
+		CertificationBodyDTO toUpdate = certificationBodyDAO.getById(acb.getId());
 
-		if((acb.getName() != null && Util.isUserRoleAdmin()) || acb.getName() == null){
-			CertificationBodyDTO toUpdate = certificationBodyDAO.getById(acb.getId());
+		if((acb.getName() != null && Util.isUserRoleAdmin()) || acb.getName() == null || acb.getName().equals(toUpdate.getName())){
 			result = certificationBodyDAO.update(acb);
 			logger.debug("Updated acb " + acb);
 			String activityMsg = "Updated acb " + acb.getName();
