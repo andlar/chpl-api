@@ -35,7 +35,8 @@ public class ChangeRequestStatusDAOImpl extends BaseDAOImpl implements ChangeReq
                 + "FROM ChangeRequestStatusEntity crStatus "
                 + "JOIN FETCH crStatus.changeRequestStatusType "
                 + "JOIN FETCH crStatus.userPermission "
-                + "LEFT JOIN FETCH crStatus.certificationBody "
+                + "LEFT JOIN FETCH crStatus.certificationBody acb "
+                + "LEFT JOIN FETCH acb.address "
                 + "WHERE crStatus.deleted = false "
                 + "AND crStatus.changeRequest.id = :changeRequestId";
 
